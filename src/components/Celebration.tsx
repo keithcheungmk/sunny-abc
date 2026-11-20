@@ -3,7 +3,7 @@
 import { useEffect, useState } from "react";
 import { cn } from "@/lib/utils";
 
-const BITS = ["\u2b50", "\ud83c\udf1f", "\u2728", "\ud83c\udf88", "\ud83c\udf89", "\ud83d\udc9b", "\ud83e\udde1"];
+const BITS = ["⭐", "🌟", "✨", "🎈", "🎉", "💛", "🧡"];
 
 type CelebrationProps = {
   show: boolean;
