@@ -7,59 +7,44 @@ import { LetterTile } from "@/components/LetterTile";
 import { SoftButton } from "@/components/SoftButton";
 import { SkyScene } from "@/components/SkyScene";
 import { StarMeter } from "@/components/StarMeter";
-import {
-  PHONICS,
-  randomOtherLetters,
-  shuffle,
-  type PhonicsLetter,
-} from "@/lib/phonics";
+import { makeRound, type Round } from "@/lib/rounds";
 import { speakPraise, speakSoundOnly, speakTryAgain, unlockSpeech } from "@/lib/speech";
 
-type Round = {
-  answer: PhonicsLetter;
-  choices: PhonicsLetter[];
-};
-
-function makeRound(): Round {
-  const answer = PHONICS[Math.floor(Math.random() * PHONICS.length)];
-  const choices = shuffle([answer, ...randomOtherLetters(answer.letter, 2)]);
-  return { answer, choices };
-}
-
 export function ListenClient() {
-  const [round, setRound] = useState<Round | null>(null);
+  const [round, setRound] = useState<Round>(() => makeRound(0));
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setRound(makeRound());
+    setReady(true);
   }, []);
 
   const playSound = useCallback(() => {
-    if (!round) return;
     unlockSpeech();
     speakSoundOnly(round.answer.sound);
   }, [round]);
 
   useEffect(() => {
-    if (!round) return;
+    if (!ready) return;
     const t = window.setTimeout(playSound, 400);
     return () => window.clearTimeout(t);
-  }, [round, playSound]);
+  }, [ready, round.answer.letter, playSound]);
 
   const statusFor = useMemo(() => {
     return (letter: string) => {
-      if (!picked || !round) return "idle" as const;
+      if (!picked) return "idle" as const;
       if (letter === round.answer.letter && picked === letter) return "correct" as const;
       if (letter === picked && picked !== round.answer.letter) return "wrong" as const;
       return "idle" as const;
     };
-  }, [picked, round]);
+  }, [picked, round.answer.letter]);
 
   const onPick = (letter: string) => {
-    if (!round || locked) return;
+    if (locked) return;
     setPicked(letter);
     setLocked(true);
     if (letter === round.answer.letter) {
@@ -81,29 +66,18 @@ export function ListenClient() {
     }
   };
 
-  if (!round) {
-    return (
-      <SkyScene>
-        <AppHeader title="Listen & Tap" />
-        <main className="flex flex-1 items-center justify-center font-display text-2xl font-bold">
-          Getting ready…
-        </main>
-      </SkyScene>
-    );
-  }
-
   return (
     <SkyScene>
       <Celebration show={celebrate} />
       <AppHeader title="Listen & Tap" subtitle="Hear the sound. Tap the letter!" />
-      <main className="relative flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
+      <main className="relative z-20 flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
         <StarMeter score={score} />
 
-        <SoftButton onClick={playSound} size="xl" className="min-w-[12rem] animate-pulse-soft">
+        <SoftButton onClick={playSound} size="xl" className="relative z-20 min-w-[12rem] animate-pulse-soft">
           🔊 Play sound
         </SoftButton>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           {round.choices.map((c) => (
             <LetterTile
               key={c.letter}

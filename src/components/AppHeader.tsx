@@ -1,6 +1,8 @@
 "use client";
 
-import Link from "next/link";
+import { useRouter } from "next/navigation";
+import { SoftButton } from "@/components/SoftButton";
+import { unlockSpeech } from "@/lib/speech";
 
 type AppHeaderProps = {
   title: string;
@@ -8,15 +10,22 @@ type AppHeaderProps = {
 };
 
 export function AppHeader({ title, subtitle }: AppHeaderProps) {
+  const router = useRouter();
+
   return (
-    <header className="flex items-center justify-between gap-3 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
-      <Link
-        href="/"
-        className="inline-flex min-h-14 shrink-0 touch-manipulation items-center justify-center rounded-[1.4rem] bg-white/35 px-4 text-lg font-display font-bold text-[#2b3a4a] shadow-[0_4px_0_rgba(43,58,74,0.12)] backdrop-blur-sm transition active:translate-y-1 active:shadow-[0_1px_0_rgba(43,58,74,0.12)]"
+    <header className="relative z-30 flex items-center justify-between gap-3 px-4 pb-2 pt-[max(0.75rem,env(safe-area-inset-top))] sm:px-6">
+      <SoftButton
+        variant="ghost"
+        size="md"
+        className="relative z-30 shrink-0 px-4"
         aria-label="Back home"
+        onClick={() => {
+          unlockSpeech();
+          router.push("/");
+        }}
       >
         ← Home
-      </Link>
+      </SoftButton>
       <div className="min-w-0 flex-1 text-center">
         <h1 className="truncate font-display text-2xl font-extrabold text-[#2b3a4a] drop-shadow-sm sm:text-3xl">
           {title}

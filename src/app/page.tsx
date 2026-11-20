@@ -76,13 +76,13 @@ export default function HomePage() {
           </div>
         </section>
 
-        <section className="mx-auto grid w-full max-w-5xl gap-4 pb-4 sm:grid-cols-3">
+        <section className="relative z-20 mx-auto grid w-full max-w-5xl gap-4 pb-4 sm:grid-cols-3">
           {MODES.map((mode) => (
             <Link
               key={mode.href}
               href={mode.href}
               onClick={() => unlockSpeech()}
-              className="group touch-manipulation rounded-[1.8rem] border-4 border-white/75 bg-white/55 p-5 shadow-[0_10px_0_rgba(43,58,74,0.12)] backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/75 active:translate-y-1 active:shadow-[0_4px_0_rgba(43,58,74,0.12)]"
+              className="group relative z-20 touch-manipulation rounded-[1.8rem] border-4 border-white/75 bg-white/55 p-5 shadow-[0_10px_0_rgba(43,58,74,0.12)] backdrop-blur-md transition hover:-translate-y-1 hover:bg-white/75 active:translate-y-1 active:shadow-[0_4px_0_rgba(43,58,74,0.12)]"
               style={{ boxShadow: `0 10px 0 rgba(43,58,74,0.12), inset 0 0 0 3px ${mode.tint}55` }}
             >
               <div

@@ -7,12 +7,7 @@ import { LetterTile } from "@/components/LetterTile";
 import { SoftButton } from "@/components/SoftButton";
 import { SkyScene } from "@/components/SkyScene";
 import { StarMeter } from "@/components/StarMeter";
-import {
-  PHONICS,
-  randomOtherLetters,
-  shuffle,
-  type PhonicsLetter,
-} from "@/lib/phonics";
+import { makeRound, type Round } from "@/lib/rounds";
 import {
   speakPraise,
   speakTryAgain,
@@ -20,48 +15,39 @@ import {
   unlockSpeech,
 } from "@/lib/speech";
 
-type Round = {
-  answer: PhonicsLetter;
-  choices: PhonicsLetter[];
-};
-
-function makeRound(): Round {
-  const answer = PHONICS[Math.floor(Math.random() * PHONICS.length)];
-  const choices = shuffle([answer, ...randomOtherLetters(answer.letter, 2)]);
-  return { answer, choices };
-}
-
 export function MatchClient() {
-  const [round, setRound] = useState<Round | null>(null);
+  const [round, setRound] = useState<Round>(() => makeRound(1));
   const [picked, setPicked] = useState<string | null>(null);
   const [score, setScore] = useState(0);
   const [celebrate, setCelebrate] = useState(false);
   const [locked, setLocked] = useState(false);
+  const [ready, setReady] = useState(false);
 
   useEffect(() => {
     setRound(makeRound());
+    setReady(true);
   }, []);
 
   useEffect(() => {
-    if (!round) return;
+    if (!ready) return;
     const t = window.setTimeout(() => {
       unlockSpeech();
       speakWord(round.answer.word);
     }, 400);
     return () => window.clearTimeout(t);
-  }, [round]);
+  }, [ready, round.answer.word]);
 
   const statusFor = useMemo(() => {
     return (letter: string) => {
-      if (!picked || !round) return "idle" as const;
+      if (!picked) return "idle" as const;
       if (letter === round.answer.letter && picked === letter) return "correct" as const;
       if (letter === picked && picked !== round.answer.letter) return "wrong" as const;
       return "idle" as const;
     };
-  }, [picked, round]);
+  }, [picked, round.answer.letter]);
 
   const onPick = (letter: string) => {
-    if (!round || locked) return;
+    if (locked) return;
     setPicked(letter);
     setLocked(true);
     if (letter === round.answer.letter) {
@@ -83,25 +69,14 @@ export function MatchClient() {
     }
   };
 
-  if (!round) {
-    return (
-      <SkyScene>
-        <AppHeader title="Picture Match" />
-        <main className="flex flex-1 items-center justify-center font-display text-2xl font-bold">
-          Getting ready…
-        </main>
-      </SkyScene>
-    );
-  }
-
   return (
     <SkyScene>
       <Celebration show={celebrate} />
       <AppHeader title="Picture Match" subtitle="What letter does it start with?" />
-      <main className="relative flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
+      <main className="relative z-20 flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
         <StarMeter score={score} />
 
-        <div className="flex w-full max-w-md flex-col items-center rounded-[2rem] border-4 border-white/80 bg-white/60 px-6 py-8 shadow-[0_12px_0_rgba(43,58,74,0.12)] backdrop-blur-md animate-rise">
+        <div className="relative z-20 flex w-full max-w-md flex-col items-center rounded-[2rem] border-4 border-white/80 bg-white/60 px-6 py-8 shadow-[0_12px_0_rgba(43,58,74,0.12)] backdrop-blur-md animate-rise">
           <div className="text-8xl sm:text-9xl" aria-hidden>
             {round.answer.emoji}
           </div>
@@ -121,7 +96,7 @@ export function MatchClient() {
           </SoftButton>
         </div>
 
-        <div className="flex flex-wrap items-center justify-center gap-4 sm:gap-6">
+        <div className="relative z-20 flex flex-wrap items-center justify-center gap-4 sm:gap-6">
           {round.choices.map((c) => (
             <LetterTile
               key={c.letter}

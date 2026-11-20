@@ -27,7 +27,7 @@ export function LearnClient() {
   return (
     <SkyScene>
       <AppHeader title="Learn Letters" subtitle="Tap the speaker, say it with me!" />
-      <main className="flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
+      <main className="relative z-20 flex flex-1 flex-col items-center justify-center gap-6 px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] sm:px-8">
         <p className="font-display text-lg font-bold text-[#2b3a4a]/75">
           {index + 1} / {PHONICS.length}
         </p>
