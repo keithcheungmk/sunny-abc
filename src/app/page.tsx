@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 import { SoftButton } from "@/components/SoftButton";
 import { SkyScene } from "@/components/SkyScene";
+import { SoundEnable } from "@/components/SoundEnable";
 import { unlockSpeech } from "@/lib/speech";
 
 const MODES = [
@@ -36,6 +37,7 @@ export default function HomePage() {
   return (
     <SkyScene>
       <main className="flex flex-1 flex-col px-4 pb-[max(1.5rem,env(safe-area-inset-bottom))] pt-[max(1rem,env(safe-area-inset-top))] sm:px-8">
+        <SoundEnable />
         <section className="relative mx-auto flex w-full max-w-5xl flex-1 flex-col items-center justify-center gap-8 py-6 lg:flex-row lg:items-end lg:justify-between lg:gap-10">
           <div className="flex max-w-xl flex-col items-center text-center lg:items-start lg:text-left">
             <p className="mb-2 font-display text-lg font-bold tracking-wide text-[#2b3a4a]/70 animate-rise">
