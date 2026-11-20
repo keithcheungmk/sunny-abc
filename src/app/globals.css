@@ -1,0 +1,258 @@
+@import "tailwindcss";
+
+:root {
+  --sky-top: #7ec8f8;
+  --sky-mid: #b8e4ff;
+  --field: #8fd48a;
+  --sun: #ffe066;
+  --ink: #2b3a4a;
+  --accent: #ff8a3d;
+  --background: #7ec8f8;
+  --foreground: #2b3a4a;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --font-sans: var(--font-nunito);
+  --font-display: var(--font-fredoka);
+}
+
+html,
+body {
+  height: 100%;
+}
+
+body {
+  background: var(--sky-top);
+  color: var(--ink);
+  font-family: var(--font-nunito), "Nunito", system-ui, sans-serif;
+  overscroll-behavior: none;
+  -webkit-tap-highlight-color: transparent;
+}
+
+.font-display {
+  font-family: var(--font-fredoka), "Fredoka", system-ui, sans-serif;
+}
+
+.cloud {
+  position: absolute;
+  display: block;
+  width: 120px;
+  height: 48px;
+  background: rgba(255, 255, 255, 0.88);
+  border-radius: 999px;
+  filter: drop-shadow(0 6px 0 rgba(255, 255, 255, 0.35));
+}
+
+.cloud::before,
+.cloud::after {
+  content: "";
+  position: absolute;
+  background: inherit;
+  border-radius: 999px;
+}
+
+.cloud::before {
+  width: 52px;
+  height: 52px;
+  top: -24px;
+  left: 18px;
+}
+
+.cloud::after {
+  width: 70px;
+  height: 70px;
+  top: -34px;
+  left: 48px;
+}
+
+.cloud-a {
+  top: 8%;
+  left: -4%;
+  animation: drift 28s linear infinite;
+}
+
+.cloud-b {
+  top: 18%;
+  left: 55%;
+  transform: scale(0.85);
+  animation: drift 36s linear infinite reverse;
+}
+
+.cloud-c {
+  top: 28%;
+  left: 20%;
+  transform: scale(0.7);
+  opacity: 0.85;
+  animation: drift 42s linear infinite;
+}
+
+.sun {
+  position: absolute;
+  top: 4%;
+  right: 6%;
+  width: 92px;
+  height: 92px;
+  border-radius: 999px;
+  background: radial-gradient(circle at 35% 35%, #fff6b0, #ffd34d 55%, #f0a500);
+  box-shadow:
+    0 0 0 10px rgba(255, 224, 102, 0.35),
+    0 10px 0 rgba(217, 150, 20, 0.25);
+  animation: glow 4s ease-in-out infinite;
+}
+
+.hill {
+  position: absolute;
+  bottom: -8%;
+  width: 70%;
+  height: 28%;
+  border-radius: 50% 50% 0 0;
+  background: linear-gradient(180deg, #9ee089, #6fc56a);
+}
+
+.hill-left {
+  left: -15%;
+}
+
+.hill-right {
+  right: -18%;
+  height: 34%;
+  background: linear-gradient(180deg, #86d67c, #5bb85a);
+}
+
+@keyframes drift {
+  from {
+    transform: translateX(0);
+  }
+  to {
+    transform: translateX(35vw);
+  }
+}
+
+@keyframes glow {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.05);
+  }
+}
+
+@keyframes floaty {
+  0%,
+  100% {
+    transform: translateY(0);
+  }
+  50% {
+    transform: translateY(-10px);
+  }
+}
+
+@keyframes rise {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes pop {
+  0% {
+    transform: scale(1);
+  }
+  40% {
+    transform: scale(1.12);
+  }
+  100% {
+    transform: scale(1);
+  }
+}
+
+@keyframes wiggle {
+  0%,
+  100% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(-6deg);
+  }
+  75% {
+    transform: rotate(6deg);
+  }
+}
+
+@keyframes celebrate {
+  0% {
+    opacity: 0;
+    transform: translateY(0) scale(0.6);
+  }
+  20% {
+    opacity: 1;
+  }
+  100% {
+    opacity: 0;
+    transform: translateY(-140px) scale(1.2);
+  }
+}
+
+@keyframes pulseSoft {
+  0%,
+  100% {
+    transform: scale(1);
+  }
+  50% {
+    transform: scale(1.04);
+  }
+}
+
+.animate-float {
+  animation: floaty 3.5s ease-in-out infinite;
+}
+
+.animate-rise {
+  animation: rise 0.55s ease-out both;
+}
+
+.animate-rise-delayed {
+  animation: rise 0.65s ease-out 0.08s both;
+}
+
+.animate-rise-late {
+  animation: rise 0.7s ease-out 0.16s both;
+}
+
+.animate-pop {
+  animation: pop 0.45s ease-out;
+}
+
+.animate-wiggle {
+  animation: wiggle 0.4s ease-in-out;
+}
+
+.animate-pulse-soft {
+  animation: pulseSoft 1.8s ease-in-out infinite;
+}
+
+.celebrate-bit {
+  animation: celebrate 1.2s ease-out forwards;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .cloud,
+  .sun,
+  .animate-float,
+  .animate-pulse-soft,
+  .celebrate-bit,
+  .animate-pop,
+  .animate-wiggle,
+  .animate-rise,
+  .animate-rise-delayed,
+  .animate-rise-late {
+    animation: none !important;
+  }
+}
